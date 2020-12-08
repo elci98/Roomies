@@ -8,7 +8,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
-        android:label=""
+        android:label="@string/app_name"
         android:roundIcon="@drawable/circled_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rommies">
@@ -22,14 +22,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".Login" />
-        <activity android:name=".Register" />
-        <activity android:name=".afterRegister" >
-
-        </activity>
-        <activity android:name=".Apartment"
-            android:theme="@style/Theme.Rommies.ActionBar">
-
-        </activity>
+        <activity
+            android:name=".Register"
+            android:label="@string/title_activity_register"
+            android:theme="@style/Theme.Rommies.NoActionBar" />
+        <activity android:name=".afterRegister" />
+        <activity android:name=".Apartment" />
         <activity android:name=".MyAccount" />
     </application>
 

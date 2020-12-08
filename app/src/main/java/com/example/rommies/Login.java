@@ -27,18 +27,19 @@ public class Login extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        userRef = FirebaseDatabase.getInstance().getReference("/Users/");
-//        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot)
-//            {
-//                dataSnapshot = snapshot;
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+        userRef = FirebaseDatabase.getInstance().getReference("/Users/");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                dataSnapshot = snapshot;
+                System.out.println("1111");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         fAuth = FirebaseAuth.getInstance();
         login = (Button)findViewById(R.id.login);
         etEmail = (EditText)findViewById(R.id.email);
@@ -57,30 +58,25 @@ public class Login extends AppCompatActivity {
                     return;
                 }
                 Toast.makeText(Login.this, "login succeed", Toast.LENGTH_SHORT).show();
-                userRef = FirebaseDatabase.getInstance().getReference("/Users/"+task.getResult().getUser().getUid());
-                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                for(DataSnapshot ds : dataSnapshot.getChildren())
+                {
+                    user = (User) ds.getValue(User.class);
+                    if(user.getAprKey() == task.getResult().getUser().getUid())
+                        break;
+                }
+                Intent intent = null;
+                if(user.getAprKey()==null)
+                {
+                    intent = new Intent(this, afterRegister.class);
+                }
+                else
                     {
-                        Intent intent = null;
-                        if(snapshot.hasChild("Apartment_key"))
-                        {
-                            intent = new Intent(getApplicationContext(), Apartment.class);
-                            intent.putExtra("com.example.rommies.aprKey",(String)snapshot.child("Apartment_key").getValue());
-                        }
-                        else
-                            intent = new Intent(getApplicationContext(), afterRegister.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
+                  intent = new Intent(this, Apartment.class);
+                  intent.putExtra("com.example.rommies.aprKey",user.getAprKey());
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             });
 
         });
