@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class afterRegister extends AppCompatActivity
+public class afterRegisterActivity extends AppCompatActivity
 {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
@@ -90,7 +90,7 @@ public class afterRegister extends AppCompatActivity
         //aprRef = dbRef.child("/Apartments/"+aprKey+"/");
         join.setOnClickListener((v)->{
 
-            Intent i=new Intent(afterRegister.this,joinToExistApartment.class);
+            Intent i=new Intent(afterRegisterActivity.this, JoinAprActivity.class);
             i.putExtra("com.example.roomies.Name",Name);
             i.putExtra("com.example.roomies.Uid",mAuth.getUid());
             startActivity(i);
@@ -144,7 +144,20 @@ public class afterRegister extends AppCompatActivity
         });
     }
 
-
+    private void createApr()
+    {
+        dbRef.child("/"+aprKey+"/roommates").child(mAuth.getUid()).setValue(Name);
+        dbRef.child("/"+aprKey+"/Manager").setValue(mAuth.getUid());
+        dbRef.child("/"+aprKey+"/Name").setValue(etAprName.getText().toString());
+        reference.child("Apartment_key").setValue(aprKey);
+        pb.setVisibility(View.GONE);
+        Toast.makeText(this,"Apartment created successfully!",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(afterRegisterActivity.this, ApartmentActivity.class);
+        intent.putExtra("com.example.rommies.aprKey", aprKey);
+        startActivity(intent);
+        finish();
+        d.dismiss();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void handleAdd(View v)//check whether read contacts permission is enabled

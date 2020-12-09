@@ -17,7 +17,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,11 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
-import java.util.HashMap;
-import java.util.Map;
-
-
-public class Register extends AppCompatActivity
+public class RegisterActivity extends AppCompatActivity
 {
 
     private Button regbtn;
@@ -67,7 +62,7 @@ public class Register extends AppCompatActivity
                         if (!task.isSuccessful())
                         {
                             pb.setVisibility(View.GONE);
-                            Toast.makeText(Register.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
@@ -75,8 +70,8 @@ public class Register extends AppCompatActivity
                         u.setUid(Uid);
                         dbRef.child("Users").child(Uid).setValue(u);
                         pb.setVisibility(View.GONE);
-                        Toast.makeText(Register.this, "user created successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Register.this, afterRegister.class);
+                        Toast.makeText(RegisterActivity.this, "user created successfully", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RegisterActivity.this, afterRegisterActivity.class);
                         startActivity(intent);
                         finish();
                     }

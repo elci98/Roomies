@@ -1,32 +1,32 @@
-package com.example.newroomies;
+package com.example.rommies;
 
 import java.util.ArrayList;
 
-public class payment {
+public class Payment {
     private double amount;
     private String Uid1;
-    private ArrayList<String> Uid3;
+//    private ArrayList<String> Uid3;
     private  String Reason;
 
     public void payment (){
 
     }
 
-    public  payment(String u1, double money ,String r,ArrayList<String> l){
+    public Payment(String u1, double money , String r){//, ArrayList<String> l){
         this.Uid1=u1;
         this.amount=money;
         this.Reason=r;
-        this.Uid3=l;
+//        this.Uid3=l;
 
     }
 
-    public ArrayList<String> getUid3() {
-        return this.Uid3;
-    }
-
-    public void setUid3(ArrayList<String> uid3) {
-        this.Uid3 = uid3;
-    }
+//    public ArrayList<String> getUid3() {
+//        return this.Uid3;
+//    }
+//
+//    public void setUid3(ArrayList<String> uid3) {
+//        this.Uid3 = uid3;
+//    }
 
     public String getReason() { return this.Reason; }
 
