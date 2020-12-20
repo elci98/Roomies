@@ -149,8 +149,7 @@ import java.util.Map;
                 System.out.println("payPerPerson: "+payPerPerson);
                 ArrayList<String> uid=new ArrayList<>();
                 aprRef = FirebaseDatabase.getInstance().getReference("Apartments");
-                pay = new Payment(userID, Amount, spin);
-                aprRef.child(key_ap).child("Payment").child(userRef.push().getKey()).setValue(pay);
+
                 int i=1;
                 for(Map.Entry<String, String> entry : checkedNames.entrySet())//add to specific user the amount to pay me
                 {
@@ -187,6 +186,8 @@ import java.util.Map;
                     System.out.println("currentBalance: "+currentBalance+", payPerPerson: "+ payPerPerson);
                     userRef.child(owe).setValue(currentBalance + payPerPerson);
                 }
+                pay = new Payment(userID, Amount, spin,uid);
+                aprRef.child(key_ap).child("Payment").child(userRef.push().getKey()).setValue(pay);
 
                 finish();
             }

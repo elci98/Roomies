@@ -5,28 +5,28 @@ import java.util.ArrayList;
 public class Payment {
     private double amount;
     private String Payer;
-//    private ArrayList<String> Uid3;
+    private ArrayList<String> Participants;
     private  String Reason;
 
-    public void payment (){
+    public Payment(){
 
     }
 
-    public Payment(String u1, double money , String r){//, ArrayList<String> l){
+    public Payment(String u1, double money , String r, ArrayList<String> uids){//){
         this.Payer=u1;
         this.amount=money;
         this.Reason=r;
-//        this.Uid3=l;
+        this.Participants=uids;
 
     }
 
-//    public ArrayList<String> getUid3() {
-//        return this.Uid3;
-//    }
-//
-//    public void setUid3(ArrayList<String> uid3) {
-//        this.Uid3 = uid3;
-//    }
+    public ArrayList<String> getParticipant() {
+        return this.Participants;
+    }
+
+    public void setParticipant(ArrayList<String> uids) {
+        this.Participants = uids;
+    }
 
     public String getReason() { return this.Reason; }
 

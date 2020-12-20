@@ -42,7 +42,8 @@
         <activity android:name=".ManagerActivity" />
         <activity android:name=".ApartmentActivity"
             android:theme="@style/Theme.Rommies.ActionBar">
-
+        </activity>
+        <activity android:name=".InfoActivity">
         </activity>
         <activity android:name=".MyAccount" />
     </application>

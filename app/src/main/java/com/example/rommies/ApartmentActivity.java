@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ public class ApartmentActivity extends AppCompatActivity {
     private boolean isManager = false;
     private MenuItem adminBtn;
     private HashMap<String, String> usersMap = new HashMap<>();
+    private Button btinf;
 
 
 
@@ -97,6 +99,17 @@ public class ApartmentActivity extends AppCompatActivity {
         adapter= new ArrayAdapter<>(ApartmentActivity.this, android.R.layout.simple_list_item_1, roommates);
         listViewRoomate.setAdapter(adapter);
         mAuth=FirebaseAuth.getInstance();
+        btinf=(Button)findViewById(R.id.btninfo);
+        btinf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in=new Intent(getApplicationContext(),InfoActivity.class);
+                in.putExtra("com.app.java.Info.key",aprKey);
+
+                startActivity(in);
+
+            }
+        });
 
         listViewRoomate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
