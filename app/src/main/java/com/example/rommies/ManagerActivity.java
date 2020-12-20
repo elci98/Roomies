@@ -442,19 +442,10 @@ public class ManagerActivity extends AppCompatActivity {
                             tv1.setText(name);
                             tv1.setTextAppearance(getApplicationContext(),R.style.TextAppearance_AppCompat_Medium);
                             tv1.setId(1);
-                            //TextView 2 --> x "button"
-                            GradientDrawable shape = new GradientDrawable();
-                            shape.setShape(GradientDrawable.RECTANGLE);
-                            shape.setColor(Color.RED);
-                            shape.setStroke(5, Color.BLACK);
-                            shape.setCornerRadius(15);
+                            //Remove button
+
                             Button bt = new Button(d.getContext(),null,android.R.style.Widget_Material_Light_Button_Small);
-                            bt.setText("X");
-                            bt.setTextAppearance(getApplicationContext(),R.style.TextAppearance_AppCompat_Medium);
-                            bt.setBackgroundColor(Color.RED);
-                            bt.setTextColor(Color.WHITE);
-                            bt.setBackground(shape);
-                            bt.setPadding(10,5,10,5);
+                            bt.setBackgroundResource(R.drawable.ic_baseline_delete_24);
                             bt.setOnClickListener((v)->
                             {
                                 contacts.remove(name);

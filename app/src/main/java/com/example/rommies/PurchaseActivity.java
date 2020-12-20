@@ -13,8 +13,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+ import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+ import androidx.annotation.NonNull;
  import androidx.annotation.Nullable;
  import androidx.appcompat.app.AppCompatActivity;
 
@@ -164,12 +165,12 @@ import java.util.Map;
                         public Transaction.Result doTransaction(@NonNull MutableData currentData)
                         {
                             System.out.println("2222"+currentData.getKey());
-                            double v = 0;
+                            double balance = 0;
                             if(currentData.getValue() != null) {
-                                v =currentData.getValue(Double.class);
+                                balance =currentData.getValue(Double.class);
                             }
-                            v-= payPerPerson;
-                            currentData.setValue(v);
+                            balance -= payPerPerson;
+                            currentData.setValue(balance);
                             return Transaction.success(currentData);
                         }
 
@@ -188,7 +189,7 @@ import java.util.Map;
                 }
                 pay = new Payment(userID, Amount, spin,uid);
                 aprRef.child(key_ap).child("Payment").child(userRef.push().getKey()).setValue(pay);
-
+                Toast.makeText(PurchaseActivity.this,"Purchase successfully received",Toast.LENGTH_LONG).show();
                 finish();
             }
         });
