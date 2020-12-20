@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private EditText etEmail, etPass;
     private DatabaseReference userRef;
+    private ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -26,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        pb = findViewById(R.id.progressBar2);
         fAuth = FirebaseAuth.getInstance();
         login = findViewById(R.id.login);
         etEmail = findViewById(R.id.email);
@@ -33,23 +37,26 @@ public class LoginActivity extends AppCompatActivity {
 
         login.setOnClickListener((v) ->
         {
-
+            pb.setVisibility(View.VISIBLE);
             String email = etEmail.getText().toString();
             String password = etPass.getText().toString();
             if(password.isEmpty())
             {
                 etPass.setError("You must fill in this field");
+                pb.setVisibility(View.GONE);
                 return;
             }
             if(email.isEmpty())
             {
                 etEmail.setError("You must fill in this field");
+                pb.setVisibility(View.GONE);
                 return;
             }
             fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener((task)->
             {
                 if(!task.isSuccessful())
                 {
+                    pb.setVisibility(View.GONE);
                     Toast.makeText(LoginActivity.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -76,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                         else
                             intent = new Intent(getApplicationContext(), afterRegisterActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        pb.setVisibility(View.GONE);
                         startActivity(intent);
                         finish();
 
