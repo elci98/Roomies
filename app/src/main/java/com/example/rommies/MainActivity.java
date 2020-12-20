@@ -17,8 +17,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
-//    private DatabaseReference fdb2 = FirebaseDatabase.getInstance().getReference("Users");
-//    private DatabaseReference fdb = FirebaseDatabase.getInstance().getReference("Apartments");
     private String aprKey = null;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -31,7 +29,6 @@ public class MainActivity extends AppCompatActivity
         {
             aprKey = uri.getLastPathSegment();
         }
-
     }
     public void register(View v)
     {

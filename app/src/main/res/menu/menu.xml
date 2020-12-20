@@ -10,13 +10,23 @@
         android:titleCondensed="admin"
         android:visible="false"
         />
+
     <item
-        android:id="@+id/newPurchase"
-        android:icon="@drawable/ic_baseline_add_24"
+        android:id="@+id/info"
+        android:icon="@drawable/ic_twotone_info_24"
         app:showAsAction="always"
-        android:title="new purchase"
+        android:title="purchase info"
         android:contentDescription="new purchase"
-        android:titleCondensed="add"
+        android:titleCondensed="info"
 
         />
+    <item
+    android:id="@+id/newPurchase"
+    android:icon="@drawable/ic_baseline_add_24"
+    app:showAsAction="always"
+    android:title="new purchase"
+    android:contentDescription="new purchase"
+    android:titleCondensed="add"
+
+    />
 </menu>
