@@ -1,23 +1,25 @@
- package com.example.rommies;
+package com.example.rommies;
 
- import android.content.Intent;
- import android.os.Bundle;
- import android.text.TextUtils;
- import android.util.Log;
- import android.util.SparseBooleanArray;
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
- import android.widget.Toast;
+import android.widget.TextView;
 
- import androidx.annotation.NonNull;
- import androidx.annotation.Nullable;
- import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,15 +27,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
- import com.google.firebase.database.MutableData;
- import com.google.firebase.database.Transaction;
- import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
- public class PurchaseActivity extends AppCompatActivity {
+public class PurchaseActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static  final String TAG ="PurActivity";
 
 
@@ -60,6 +63,8 @@ import java.util.Map;
     private HashMap<String, String> checkedNames = new HashMap<>();
     private HashMap<String,Double> NeedToPayMe= new HashMap<>();
     private Payment pay;
+    private TextView dateText;
+    private Date date = new Date();
 
 
     @Override
@@ -72,6 +77,13 @@ import java.util.Map;
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
         Money = findViewById(R.id.amount);
+        dateText=findViewById(R.id.textdate);
+        findViewById(R.id.btndate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDailog();
+            }
+        });
         btfinish = findViewById(R.id.finish1);
         userRef = FirebaseDatabase.getInstance().getReference("/Apartments/"+key_ap).child("Balance").child(userID);
         userRef.addValueEventListener(new ValueEventListener() {
@@ -104,32 +116,32 @@ import java.util.Map;
 
         listname.setAdapter(adapter);
 
-            for(Map.Entry<String,String> user1: users.entrySet() )
-            {
-                arrname.add(user1.getValue());
-                arruser.add(user1.getKey());
-            }
-             adapter.notifyDataSetChanged();
+        for(Map.Entry<String,String> user1: users.entrySet() )
+        {
+            arrname.add(user1.getValue());
+            arruser.add(user1.getKey());
+        }
+        adapter.notifyDataSetChanged();
         listname.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-          @Override
-          public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-          {
-            SparseBooleanArray spb = listname.getCheckedItemPositions();
-            String name = arrname.get(position);
-            String uid=arruser.get(position);
-            if(spb.get(position) && !checkedNames.containsKey(uid))
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                checkedNames.put(uid, name);
+                SparseBooleanArray spb = listname.getCheckedItemPositions();
+                String name = arrname.get(position);
+                String uid=arruser.get(position);
+                if(spb.get(position) && !checkedNames.containsKey(uid))
+                {
+                    checkedNames.put(uid, name);
+                }
+
+                else if(checkedNames.containsKey(uid))
+                {
+                    checkedNames.remove(uid);
+                }
+
+
             }
-
-            else if(checkedNames.containsKey(uid))
-            {
-                checkedNames.remove(uid);
-            }
-
-
-          }
-      });
+        });
         btfinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +155,9 @@ import java.util.Map;
                     btfinish.setError("please choose someone to charge");
                     System.out.println("checkedNames is empty");
                     return;
+                }
+                if(TextUtils.isEmpty(date.toString())){
+                    dateText.setError("enter date");
                 }
                 Amount=Integer.parseInt(Money.getText().toString());
                 spin=spinner.getSelectedItem().toString();
@@ -165,12 +180,12 @@ import java.util.Map;
                         public Transaction.Result doTransaction(@NonNull MutableData currentData)
                         {
                             System.out.println("2222"+currentData.getKey());
-                            double balance = 0;
+                            double v = 0;
                             if(currentData.getValue() != null) {
-                                balance =currentData.getValue(Double.class);
+                                v =currentData.getValue(Double.class);
                             }
-                            balance -= payPerPerson;
-                            currentData.setValue(balance);
+                            v-= payPerPerson;
+                            currentData.setValue(v);
                             return Transaction.success(currentData);
                         }
 
@@ -187,11 +202,31 @@ import java.util.Map;
                     System.out.println("currentBalance: "+currentBalance+", payPerPerson: "+ payPerPerson);
                     userRef.child(owe).setValue(currentBalance + payPerPerson);
                 }
-                pay = new Payment(userID, Amount, spin,uid);
+                pay = new Payment(userID, Amount, spin,uid,date);
                 aprRef.child(key_ap).child("Payment").child(userRef.push().getKey()).setValue(pay);
-                Toast.makeText(PurchaseActivity.this,"Purchase successfully received",Toast.LENGTH_LONG).show();
+
                 finish();
             }
         });
+    }
+    private void showDatePickerDailog(){
+        DatePickerDialog datePickerDialog=new DatePickerDialog(
+                this,
+                this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        String dateshow=dayOfMonth+" / "+month+" / "+year;
+        date.setDay(dayOfMonth);
+        date.setMonth(month);
+        date.setYear(year);
+        dateText.setText(dateshow);
+
     }
 }

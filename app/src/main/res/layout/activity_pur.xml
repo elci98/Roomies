@@ -12,7 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="212dp"
         android:layout_marginTop="100dp"
         android:orientation="vertical">
 
@@ -33,6 +33,23 @@
             android:layout_width="118dp"
             android:layout_height="39dp"
             android:layout_marginLeft="150dp" />
+
+        <Button
+            android:id="@+id/btndate"
+            android:layout_width="229dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+
+            android:layout_marginRight="50dp"
+            android:text="Date" />
+
+        <TextView
+            android:id="@+id/textdate"
+            android:layout_width="229dp"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="50dp"
+            android:layout_height="48dp" />
 
     </LinearLayout>
 

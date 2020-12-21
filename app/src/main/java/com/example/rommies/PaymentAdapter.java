@@ -36,6 +36,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
             holder.Buyer.setText(pay.getPayer());
             holder.Categore.setText(pay.getReason());
             holder.Price.setText((String.valueOf(pay.getAmount())));
+            holder.Date.setText(pay.getDate().toString());
 
         }else {
             return;
@@ -48,13 +49,14 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView Buyer,Price,Categore;
+        TextView Buyer,Price,Categore,Date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             Buyer=itemView.findViewById(R.id.buy);
             Price=itemView.findViewById(R.id.pri);
             Categore=itemView.findViewById(R.id.categ);
+            Date=itemView.findViewById(R.id.date);
 
         }
     }

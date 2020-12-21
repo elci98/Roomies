@@ -66,6 +66,14 @@
                 android:gravity="center"
                 android:layout_column="1"
                 />
+            <TextView
+            android:text="Date"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_column="1"
+            />
 
 
         </TableRow>

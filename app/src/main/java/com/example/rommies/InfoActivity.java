@@ -87,8 +87,7 @@ public class InfoActivity extends AppCompatActivity {
                 String categore=sp.getSelectedItem().toString();
                 pay_list.clear();
                 Payment pay=new Payment();
-                //Query queryother = rootRef.child("Payment").orderByChild("reason").equalTo(categore);
-               // Query queryfood = rootRef.child("Payment").orderByChild("reason").equalTo("food");
+
 
                     rootRef.orderByChild("reason").equalTo(categore).addValueEventListener(new ValueEventListener() {
                         @Override
@@ -122,7 +121,7 @@ public class InfoActivity extends AppCompatActivity {
 
     private List<Payment> getList() {
         List<Payment> pay_list=new ArrayList<>();
-        pay_list.add(new Payment("123",50,"food",null));
+        pay_list.add(new Payment("123",50,"food",null,null));
 
 
         return pay_list;
