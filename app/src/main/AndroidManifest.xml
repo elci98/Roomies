@@ -12,8 +12,10 @@
         android:roundIcon="@drawable/circled_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rommies">
-        <activity android:name=".JoinAprActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+        <activity android:name=".managerPage"></activity>
+        <activity
+            android:name=".JoinAprActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".PurchaseActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -21,30 +23,29 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
-                    android:host="rommies.page.link"/>
+
+                <data
+                    android:host="rommies.page.link"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
-        <activity android:name=".RegisterActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".afterRegisterActivity" >
-
-        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".RegisterActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".afterRegisterActivity" />
         <activity android:name=".ManagerActivity" />
-        <activity android:name=".ApartmentActivity"
-            android:theme="@style/Theme.Rommies.ActionBar">
-        </activity>
-        <activity android:name=".InfoActivity">
-        </activity>
+        <activity
+            android:name=".ApartmentActivity"
+            android:theme="@style/Theme.Rommies.ActionBar" />
+        <activity android:name=".InfoActivity" />
         <activity android:name=".MyAccount" />
     </application>
 

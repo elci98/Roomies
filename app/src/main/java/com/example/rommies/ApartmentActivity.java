@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -137,7 +136,7 @@ public class ApartmentActivity extends AppCompatActivity {
             case R.id.adminBtn:
             {
                 withoutManager=new ArrayList<>();
-                Intent in=new Intent(ApartmentActivity.this, ManagerActivity.class);
+                Intent in=new Intent(ApartmentActivity.this, managerPage.class);
                 in.putExtra("keyaprt",aprKey);
                 for(int i=0; i<roommates.size(); i++)
                 {
