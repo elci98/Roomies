@@ -114,7 +114,7 @@ public class managerPage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 manager=snapshot.getValue().toString();
-                textmanage.setText("Hello "+manager+" what would you like to do?");
+                textmanage.setText("Hello "+manager);
             }
 
             @Override
