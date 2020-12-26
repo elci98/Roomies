@@ -1,39 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
     android:stretchColumns="1,2,3,4"
     >
 
 
-    <TableRow>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/linn"
+        >
+
+
         <TextView
             android:id="@+id/buy"
-            android:padding="10dp"
-            android:textSize="16dp"
             android:layout_column="1"
-            android:gravity="center"/>
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_gravity="start"
+            android:padding="10dp"
+            android:textSize="14dp"
+            android:layout_height="40dp"
+            android:layout_width="100dp" />
 
 
         <TextView
             android:id="@+id/pri"
-            android:padding="10dp"
-            android:textSize="16dp"
             android:layout_column="1"
-            android:gravity="center"/>
+            android:textStyle="bold"
+
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="14dp"
+            android:layout_height="40dp"
+            android:layout_width="110dp"/>
         <TextView
             android:id="@+id/categ"
-            android:padding="10dp"
-            android:textSize="16dp"
             android:layout_column="1"
-            android:gravity="center"/>
+            android:textStyle="bold"
+
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="14dp"
+
+            android:layout_height="40dp"
+            android:layout_width="120dp"/>
         <TextView
             android:id="@+id/date"
-            android:padding="10dp"
-            android:textSize="16dp"
             android:layout_column="1"
-            android:gravity="center"/>
+            android:textStyle="bold"
+
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="14dp"
+            android:layout_height="40dp"
+            android:layout_width="80dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/linn"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:textSize="12dp"
+            android:gravity="center"
+            
+            android:layout_height="30dp"
+            android:id="@+id/partic"
+            />
+    </LinearLayout>
 
 
-    </TableRow>
-</TableLayout>
+</RelativeLayout>

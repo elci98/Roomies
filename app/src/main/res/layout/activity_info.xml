@@ -41,8 +41,9 @@
         tools:layout_editor_absoluteX="-16dp">
 
         <TableRow>
-            <TextView
+            <Button
                 android:text="Buyer"
+                android:id="@+id/btnbuyer"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:padding="10dp"
@@ -50,24 +51,27 @@
                 android:layout_column="1"
                 />
 
-            <TextView
+            <Button
                 android:text="Price"
+                android:id="@+id/btnprice"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:gravity="center"
                 android:layout_column="1"
                 />
-            <TextView
+            <Button
                 android:text="category"
+                android:id="@+id/btncatergory"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:gravity="center"
                 android:layout_column="1"
                 />
-            <TextView
+            <Button
             android:text="Date"
+                android:id="@+id/btndate"
             android:textSize="16dp"
             android:textStyle="bold"
             android:padding="10dp"
@@ -77,10 +81,13 @@
 
 
         </TableRow>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+
+        <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="460dp"
+            android:id="@+id/listes">
+
+        </ListView>
+
     </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
