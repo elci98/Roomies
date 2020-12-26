@@ -4,8 +4,12 @@ public class Date {
     private int day;
     private int month;
     private int year;
+    private String data;
 
     public Date(){ }
+    public Date (String dat){
+        this.data=dat;
+    }
 
     public Date(int day, int month, int year) {
         this.day = day;
@@ -36,7 +40,9 @@ public class Date {
     public void setYear(int year) {
         this.year = year;
     }
-    public String toString(){
-        return day+"/"+month+"/"+year;
+    public String toString()
+    {
+        int d=year%2000;
+        return day+"/"+month+"/"+d;
     }
 }

@@ -76,6 +76,7 @@ public class PurchaseActivity extends AppCompatActivity implements DatePickerDia
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
+
         Money = findViewById(R.id.amount);
         dateText=findViewById(R.id.textdate);
         findViewById(R.id.btndate).setOnClickListener(new View.OnClickListener() {
@@ -105,6 +106,7 @@ public class PurchaseActivity extends AppCompatActivity implements DatePickerDia
 
         linear=findViewById(R.id.linearl);
         spinner = (Spinner)findViewById(R.id.spinner);
+        spinner.setPrompt("Select categore");
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(PurchaseActivity.this, android.R.layout.simple_spinner_item,paths);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter1);
