@@ -1,11 +1,13 @@
 package com.example.rommies;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -64,6 +66,21 @@ public class afterRegisterActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_register);
+        /*handle back button press */
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true )
+        {
+            @Override
+            public void handleOnBackPressed()
+            {
+                new AlertDialog.Builder(afterRegisterActivity.this).setTitle("Exit").
+                        setMessage("Do you want to exit from Rommies?").
+                        setCancelable(false).
+                        setPositiveButton("Yes", (dialog, id)-> finish())
+                        .setNegativeButton("No", (dialog, id)-> {dialog.cancel();return;}).
+                        create().
+                        show();
+            }
+        });
         create = findViewById(R.id.createApr);
         join = findViewById(R.id.joinApr);
         mAuth = FirebaseAuth.getInstance();

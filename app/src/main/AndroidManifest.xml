@@ -15,8 +15,11 @@
         <activity android:name=".managerPage"></activity>
         <activity
             android:name=".JoinAprActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".PurchaseActivity" />
+            android:windowSoftInputMode="adjustNothing"
+            />
+        <activity android:name=".PurchaseActivity"
+            android:windowSoftInputMode="adjustNothing"
+            />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,12 +39,11 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".RegisterActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".afterRegisterActivity" />
-        <activity android:name=".ManagerActivity" />
         <activity
             android:name=".ApartmentActivity"
             android:theme="@style/Theme.Rommies.ActionBar" />

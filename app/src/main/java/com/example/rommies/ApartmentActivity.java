@@ -54,7 +54,6 @@ public class ApartmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_apartment);
 
         /*handle back button press */
-
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true )
         {
             @Override

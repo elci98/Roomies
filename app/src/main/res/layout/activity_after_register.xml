@@ -21,11 +21,11 @@
 
     <Button
         android:id="@+id/createApr"
-        style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:shadowColor="#FFFFFF"
         android:text="Create Apartment"
+        android:shadowColor="#FFFFFF"
+        style="@android:style/Widget.Material.Button.Colored"
         android:textColor="@color/black"
         app:backgroundTintMode="screen"
         app:layout_constraintBottom_toBottomOf="parent"

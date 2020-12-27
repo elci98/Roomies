@@ -17,5 +17,6 @@
     <string name="add_roommate">Add Roommate</string>
     <string name="create">CREATE</string>
     <string name="email">Email</string>
+    <string name="addDate">Add Date</string>
 
 </resources>

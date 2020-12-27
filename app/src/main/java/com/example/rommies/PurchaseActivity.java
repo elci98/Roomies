@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -206,7 +207,7 @@ public class PurchaseActivity extends AppCompatActivity implements DatePickerDia
                 }
                 pay = new Payment(userID, Amount, spin,uid,date);
                 aprRef.child(key_ap).child("Payment").child(userRef.push().getKey()).setValue(pay);
-
+                Toast.makeText(PurchaseActivity.this, "Purchase completed successfully!", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
