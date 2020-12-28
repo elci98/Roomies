@@ -1,45 +1,58 @@
 package com.example.rommies;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.SyncTree;
+import com.google.firebase.database.core.view.Event;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InfoActivity extends AppCompatActivity {
     private static final String[] paths = {"other","food"};
     private Spinner sp;
     private Button apply;
-   // private TableLayout tlayout;
-    //private PaymentAdapter adapter;
-    //private RecyclerView recycler_view;
     private ListView listv;
     private Map<String, String> users = new HashMap<>();
     private ArrayList<lastinfo> linfo =new ArrayList<lastinfo>();
     private Button btdate,btpayer,btcategory,btprice;
     private boolean clicker=true;
-
-
-
+    private  boolean isManager = false;
+    private Map<String, Payment> payments = new HashMap<>();
     private String key_ap;
+    private TextView tvManager;
+    private InfoAdapter adapter;
 
 
 
@@ -47,43 +60,43 @@ public class InfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-
+        adapter = new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
         key_ap = getIntent().getExtras().getString("com.app.java.Info.key");
         btdate=findViewById(R.id.btndate);
         btcategory=findViewById(R.id.btncatergory);
         btpayer=findViewById(R.id.btnbuyer);
         btprice=findViewById(R.id.btnprice);
-
-
-       // tlayout=findViewById(R.id.tablelay);
         apply=findViewById(R.id.btnapply);
         listv=findViewById(R.id.listes);
+        listv.setAdapter(adapter);
+        tvManager = findViewById(R.id.textViewManager);
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Apartments").child(key_ap).child("Payment");
-        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("Apartments").child(key_ap).child("roommates");
-        //List<Payment> pay_list=new ArrayList<>();
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("Apartments").child(key_ap);
 
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds : snapshot.getChildren()){
-                    users.put( ds.getKey(),ds.getValue().toString());
+                if(snapshot.child("Manager").getValue().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                {
+                    isManager = true;
+                    tvManager.setVisibility(View.VISIBLE);
+                }
+                for(DataSnapshot ds : snapshot.child("roommates").getChildren()){
+                    users.put(ds.getKey(),ds.getValue().toString());
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
 
-
-        //setRecyclerView();
         rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
 
                     Payment pay = ds.getValue(Payment.class);
+                    payments.put(pay.getKey(),pay);
                     lastinfo lf=new lastinfo();
                     StringBuilder sb = new StringBuilder();
                     for(int i= 0 ; i<pay.getParticipant().size() ;i++)
@@ -103,13 +116,24 @@ public class InfoActivity extends AppCompatActivity {
                     lf.setDate(pay.getDate());
                     lf.setReason(pay.getReason());
                     lf.setPartic(sb.toString());
+                    lf.setKey(pay.getKey());
                     linfo.add(lf);
 
                 }
-                InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
-                listv.setAdapter(adapt);
+//                InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
+                adapter.notifyDataSetChanged();
+                listv.setOnItemLongClickListener((parent, view1, pos, id) -> {
+                    if(!isManager)return false;
+                    new AlertDialog.Builder(InfoActivity.this)
+                            .setIcon(android.R.drawable.ic_delete)
+                            .setTitle("Are you sure you want to delete this payment?")
+                            .setMessage("this wil recalculate balances")
+                            .setPositiveButton("Yes", (dialog, which) -> deletePayment(pos))
+                            .setNegativeButton("No", null)
+                            .show();
+                       return true;
+                });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -123,42 +147,37 @@ public class InfoActivity extends AppCompatActivity {
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String categore=sp.getSelectedItem().toString();
+                String category=sp.getSelectedItem().toString();
                 linfo.clear();
-                Payment pay=new Payment();
-
-
-                    rootRef.orderByChild("reason").equalTo(categore).addValueEventListener(new ValueEventListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.O)
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot ds : snapshot.getChildren()) {
-
-                               Payment pay = ds.getValue(Payment.class);
-                                lastinfo lf=new lastinfo();
-                                StringBuilder sb = new StringBuilder();
-                                for(int i= 0 ; i<pay.getParticipant().size() ;i++)
+                rootRef.orderByChild("reason").equalTo(category).addValueEventListener(new ValueEventListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            Payment pay = ds.getValue(Payment.class);
+                            lastinfo lf=new lastinfo();
+                            StringBuilder sb = new StringBuilder();
+                            for(int i= 0 ; i<pay.getParticipant().size() ; i++)
+                            {
+                                if(pay.getParticipant().size() != i+1)
                                 {
-                                    if(!(i+1==pay.getParticipant().size()))
-                                    {
-                                        sb.append(users.get(pay.getParticipant().get(i))+" , ");
-                                    }
-                                    else
-                                    {
-                                        sb.append(users.get(pay.getParticipant().get(i)));
-                                    }
+                                    sb.append(users.get(pay.getParticipant().get(i))+" , ");
                                 }
-
-                                lf.setAmount(pay.getAmount());
-                                lf.setPayer(users.get(pay.getPayer()));
-                                lf.setDate(pay.getDate());
-                                lf.setReason(pay.getReason());
-                                lf.setPartic(sb.toString());
-                                linfo.add(lf);
-
+                                else {
+                                    sb.append(users.get(pay.getParticipant().get(i)));
+                                }
                             }
-                            InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
-                            listv.setAdapter(adapt);
+                            lf.setAmount(pay.getAmount());
+                            lf.setPayer(users.get(pay.getPayer()));
+                            lf.setDate(pay.getDate());
+                            lf.setReason(pay.getReason());
+                            lf.setPartic(sb.toString());
+                            lf.setKey(pay.getKey());
+                            linfo.add(lf);
+                        }
+//                            InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
+//                            listv.setAdapter(adapt);
+                            adapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -201,8 +220,9 @@ public class InfoActivity extends AppCompatActivity {
                         }
                     });
                 }
-                InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
-                listv.setAdapter(adapt);
+//                InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
+//                listv.setAdapter(adapt);
+                adapter.notifyDataSetChanged();
                 //Collections.sort(linfo);
             }
         });
@@ -237,8 +257,10 @@ public class InfoActivity extends AppCompatActivity {
 
                     });
                 }
-                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
-                listv.setAdapter(adapt);
+//                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
+//                listv.setAdapter(adapt);
+                adapter.notifyDataSetChanged();
+
             }
         });
         btdate.setOnClickListener(new View.OnClickListener() {
@@ -303,9 +325,9 @@ public class InfoActivity extends AppCompatActivity {
                     });
 
                 }
-                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
-                listv.setAdapter(adapt);
-
+//                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
+//                listv.setAdapter(adapt);
+                adapter.notifyDataSetChanged();
             }
         });
         btcategory.setOnClickListener(new View.OnClickListener() {
@@ -339,12 +361,71 @@ public class InfoActivity extends AppCompatActivity {
 
                     });
                 }
-                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
-                listv.setAdapter(adapt);
-
+//                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
+//                listv.setAdapter(adapt);
+                adapter.notifyDataSetChanged();
             }
         });
     }
 
+    private void deletePayment(int position)
+    {
+        Payment p = payments.get(linfo.get(position).getKey());
+        DatabaseReference pRef = FirebaseDatabase.getInstance().getReference("Apartments").child(key_ap).child("Payment");
 
+        pRef.child(p.getKey()).removeValue((error, ref) -> {
+            if (error == null) {
+                ArrayList<String> participants = p.getParticipant();
+                Double payPerPerson = p.getAmount() / (participants.size() + 1);
+                String payer = p.getPayer();
+                DatabaseReference bRef = FirebaseDatabase.getInstance().getReference("Apartments").child(key_ap).child("Balance");
+                int i = 0, pos = 0;
+                String other = "";
+                while( pos < participants.size())//re adjust payments balance
+                {
+                    if( i % 2 == 0)
+                    {
+                        other = participants.get(pos);
+                        payer = p.getPayer();
+                    }
+                    int finalI = i;
+                    bRef.child(other).child(payer).runTransaction(new Transaction.Handler()
+                    {
+                        @NonNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData currentData)
+                        {
+                            double v = 0;
+                            if(currentData.getValue() != null) {
+                                v = currentData.getValue(Double.class);
+                                Log.d("trDebug", v + " before transaction");
+                            }
+                            v = (finalI % 2==0) ? v + payPerPerson : v - payPerPerson;
+                            Log.d("trDebug", v + " after transaction ");
+                            currentData.setValue(v);
+                            return Transaction.success(currentData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                            if(!committed)
+                                Log.d("trDebug", "runTransaction: " + error);
+                            else
+                                Log.d("trDebug", "runTransaction completed" );
+
+                        }
+                    });
+
+                    String t = other;
+                    other = payer;
+                    payer = t;
+                    if( ++i % 2 == 0)
+                        pos++;
+                }
+                linfo.remove(position);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(InfoActivity.this, "Payment Deleted Successfully!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

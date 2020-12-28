@@ -7,6 +7,7 @@ public class lastinfo {
     private  String Reason;
     private Date date;
     private String partic;
+    private String key;
 
     public lastinfo(){}
     public lastinfo(double amount, String payer, String reason, Date date, String part) {
@@ -57,6 +58,7 @@ public class lastinfo {
         this.date = date;
     }
 
+    public void setKey(String k) { this.key = k; }
 
-
+    public String getKey(){ return key; }
 }

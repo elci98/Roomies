@@ -205,8 +205,9 @@ public class PurchaseActivity extends AppCompatActivity implements DatePickerDia
                     System.out.println("currentBalance: "+currentBalance+", payPerPerson: "+ payPerPerson);
                     userRef.child(owe).setValue(currentBalance + payPerPerson);
                 }
-                pay = new Payment(userID, Amount, spin,uid,date);
-                aprRef.child(key_ap).child("Payment").child(userRef.push().getKey()).setValue(pay);
+                String pKey = userRef.push().getKey();
+                pay = new Payment(userID, Amount, spin,uid,date, pKey);
+                aprRef.child(key_ap).child("Payment").child(pKey).setValue(pay);
                 Toast.makeText(PurchaseActivity.this, "Purchase completed successfully!", Toast.LENGTH_SHORT).show();
                 finish();
             }

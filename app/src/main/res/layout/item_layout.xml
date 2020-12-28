@@ -20,7 +20,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:layout_gravity="start"
-            android:padding="10dp"
+            android:padding="8dp"
             android:textSize="14dp"
             android:layout_height="40dp"
             android:layout_width="100dp" />
@@ -32,7 +32,7 @@
             android:textStyle="bold"
 
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="8dp"
             android:textSize="14dp"
             android:layout_height="40dp"
             android:layout_width="110dp"/>
@@ -42,7 +42,7 @@
             android:textStyle="bold"
 
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="8dp"
             android:textSize="14dp"
 
             android:layout_height="40dp"
@@ -51,12 +51,12 @@
             android:id="@+id/date"
             android:layout_column="1"
             android:textStyle="bold"
-
-            android:gravity="center"
-            android:padding="10dp"
-            android:textSize="14dp"
+            android:padding="8dp"
+            android:textSize="11dp"
             android:layout_height="40dp"
-            android:layout_width="80dp"/>
+            android:layout_width="80dp"
+            android:textAlignment="viewStart"
+            android:gravity="start" />
     </LinearLayout>
 
     <LinearLayout

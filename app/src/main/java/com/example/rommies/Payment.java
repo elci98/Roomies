@@ -8,21 +8,24 @@ public class Payment {
     private ArrayList<String> Participants;
     private  String Reason;
     private Date date;
+    private String key;
 
     public Payment(){
 
     }
 
-    public Payment(String u1, double money , String r, ArrayList<String> uids, Date date){//){
+    public Payment(String u1, double money , String r, ArrayList<String> uids, Date date,String k){//){
         this.Payer=u1;
         this.amount=money;
         this.Reason=r;
         this.Participants=uids;
         this.date=date;
-
+        this.key = k;
     }
 
     public Date getDate() { return date; }
+
+    public String getKey() { return key; }
 
     public void setDate(Date date) { this.date = date; }
 
