@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InfoActivity extends AppCompatActivity {
-    private static final String[] paths = {"other","food"};
+    private static final String[] paths = {"other","food","Bills"};
     private Spinner sp;
     private Button apply;
     private ListView listv;
