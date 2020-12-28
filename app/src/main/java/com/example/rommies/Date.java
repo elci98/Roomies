@@ -1,21 +1,13 @@
 package com.example.rommies;
 
+import androidx.annotation.NonNull;
+
 public class Date {
     private int day;
     private int month;
     private int year;
-    private String data;
 
     public Date(){ }
-    public Date (String dat){
-        this.data=dat;
-    }
-
-    public Date(int day, int month, int year) {
-        this.day = day;
-        this.month = month;
-        this.year = year;
-    }
 
     public int getDay() {
         return day;
@@ -40,6 +32,7 @@ public class Date {
     public void setYear(int year) {
         this.year = year;
     }
+    @NonNull
     public String toString()
     {
         int d=year%2000;

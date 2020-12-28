@@ -17,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
-    private Button login;
     private FirebaseAuth fAuth;
     private EditText etEmail, etPass;
     private DatabaseReference userRef;
@@ -31,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
         pb = findViewById(R.id.progressBar2);
         fAuth = FirebaseAuth.getInstance();
-        login = findViewById(R.id.login);
+        Button login = findViewById(R.id.login);
         etEmail = findViewById(R.id.email);
         etPass = findViewById(R.id.password);
 
@@ -67,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot)
                     {
-                        Intent intent = null;
+                        Intent intent;
                         if(snapshot.hasChild("Apartment_key"))
                         {
                             intent = new Intent(getApplicationContext(), ApartmentActivity.class);

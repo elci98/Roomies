@@ -10,7 +10,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -21,7 +20,6 @@ import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,10 +44,9 @@ public class managerPage extends AppCompatActivity {
     private ListView listViewRoomate;
     private ArrayAdapter<String> adapter;
     private Dialog d;
-    private Map<String, String> contacts = new HashMap<>();
+    private final Map<String, String> contacts = new HashMap<>();
     private Map<String, String> usersMap = new HashMap<>();
-    private Map<String, String> copyMap = new HashMap<>();
-    private Map<String, String> deleteMapUser = new HashMap<>();
+    private final Map<String, String> deleteMapUser = new HashMap<>();
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int REQUEST_READ_CONTACTS = 1;
     private static final int REQUEST_SEND_SMS = 2;
@@ -114,7 +111,8 @@ public class managerPage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 manager=snapshot.getValue().toString();
-                textmanage.setText("Hello "+manager);
+                String txt = getString(R.string.txt)+manager;
+                textmanage.setText(txt);
             }
 
             @Override
@@ -245,66 +243,62 @@ public class managerPage extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            switch (requestCode)
-            {
-                case CONTACT_PICKER_RESULT:
-                    Cursor phones = null, names = null;
-                    String number = null, name;
-                    try {
-                        Uri result = data.getData();
-                        Log.v(DEBUG_TAG, "Got a contact result: " + result.toString());
-                        String id = result.getLastPathSegment();
-                        phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[]{id}, null);
-                        if(phones.moveToFirst())
+            if (requestCode == CONTACT_PICKER_RESULT) {
+                Cursor phones = null;
+                String number = null, name;
+                try {
+                    Uri result = data.getData();
+                    Log.v(DEBUG_TAG, "Got a contact result: " + result.toString());
+                    String id = result.getLastPathSegment();
+                    phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[]{id}, null);
+                    if (phones.moveToFirst()) {
+                        name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                        number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        Log.v(DEBUG_TAG, "Got phone number: " + number);
+                        Log.v(DEBUG_TAG, "Got User name: " + name);
+                        contacts.put(name, number);
+
+                        LinearLayout ll = d.findViewById(R.id.linearLayout);
+                        RelativeLayout rl = new RelativeLayout(d.getContext());
+                        //TextView 1
+                        TextView tv1 = new TextView(d.getContext());
+                        tv1.setText(name);
+                        tv1.setTextAppearance(getApplicationContext(), R.style.TextAppearance_AppCompat_Medium);
+                        tv1.setId(1);
+                        //Remove button
+
+                        Button bt = new Button(d.getContext(), null, android.R.style.Widget_Material_Light_Button_Small);
+                        bt.setBackgroundResource(R.drawable.ic_baseline_delete_24);
+                        bt.setOnClickListener((v) ->
                         {
-                            name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                            number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            Log.v(DEBUG_TAG, "Got phone number: " + number);
-                            Log.v(DEBUG_TAG, "Got User name: " + name);
-                            contacts.put(name, number);
-
-                            LinearLayout ll = d.findViewById(R.id.linearLayout);
-                            RelativeLayout rl = new RelativeLayout(d.getContext());
-                            //TextView 1
-                            TextView tv1 = new TextView(d.getContext());
-                            tv1.setText(name);
-                            tv1.setTextAppearance(getApplicationContext(),R.style.TextAppearance_AppCompat_Medium);
-                            tv1.setId(1);
-                            //Remove button
-
-                            Button bt = new Button(d.getContext(),null,android.R.style.Widget_Material_Light_Button_Small);
-                            bt.setBackgroundResource(R.drawable.ic_baseline_delete_24);
-                            bt.setOnClickListener((v)->
-                            {
-                                contacts.remove(name);
-                                ll.removeView(rl);
-                            });
-                            RelativeLayout.LayoutParams rl_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            RelativeLayout.LayoutParams tv_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            RelativeLayout.LayoutParams bt_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            tv_lp.setMargins(40, 0,0,0);
-                            bt_lp.setMargins(30,0,0,0);
-                            bt_lp.addRule(RelativeLayout.RIGHT_OF, 1);
-                            rl.addView(tv1,tv_lp);
-                            rl.addView(bt,bt_lp);
-                            ll.addView(rl, rl_lp);
-                        } else {
-                            Log.w(DEBUG_TAG, "No results");
-                        }
-
-                    } catch (Exception e) {
-                        Log.e(DEBUG_TAG, "Failed to get phone number data", e);
-                    } finally {
-                        if (phones != null) {
-                            phones.close();
-                        }
-                        if (number.length() == 0) {
-                            Toast.makeText(this, "No phone number found for contact.",
-                                    Toast.LENGTH_LONG).show();
-                        }
+                            contacts.remove(name);
+                            ll.removeView(rl);
+                        });
+                        RelativeLayout.LayoutParams rl_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams tv_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams bt_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        tv_lp.setMargins(40, 0, 0, 0);
+                        bt_lp.setMargins(30, 0, 0, 0);
+                        bt_lp.addRule(RelativeLayout.RIGHT_OF, 1);
+                        rl.addView(tv1, tv_lp);
+                        rl.addView(bt, bt_lp);
+                        ll.addView(rl, rl_lp);
+                    } else {
+                        Log.w(DEBUG_TAG, "No results");
                     }
-                    break;
+
+                } catch (Exception e) {
+                    Log.e(DEBUG_TAG, "Failed to get phone number data", e);
+                } finally {
+                    if (phones != null) {
+                        phones.close();
+                    }
+                    if (number.length() == 0) {
+                        Toast.makeText(this, "No phone number found for contact.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         }
         else {
@@ -393,34 +387,31 @@ public class managerPage extends AppCompatActivity {
         listViewRoomate=(ListView)d.findViewById(R.id.listviewchoosemanager);
         adapter=new ArrayAdapter<>(managerPage.this, android.R.layout.simple_list_item_1,roommates);
         listViewRoomate.setAdapter(adapter);
-        listViewRoomate.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final int item=position;
-                new AlertDialog.Builder(managerPage.this)
-                        .setIcon(android.R.drawable.star_big_on)
-                        .setTitle("Are you sure ?")
-                        .setMessage("Do you want to choose this manager")
-                        .setPositiveButton("Yes", (dialog, which) -> {
-                            System.out.println("111111111");
-                            for(Map.Entry<String,String> entry: usersMap.entrySet())
+        listViewRoomate.setOnItemLongClickListener((parent, view1, position, id) -> {
+            final int item=position;
+            new AlertDialog.Builder(managerPage.this)
+                    .setIcon(android.R.drawable.star_big_on)
+                    .setTitle("Are you sure ?")
+                    .setMessage("Do you want to choose this manager")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        System.out.println("111111111");
+                        for(Map.Entry<String,String> entry: usersMap.entrySet())
+                        {
+                            System.out.println("000000000"+entry.getKey());
+                            String uid=entry.getKey();
+                            String name=entry.getValue();
+                            if(usersMap.containsKey(uid) && name.equals(roommates.get(item)))
                             {
-                                System.out.println("000000000"+entry.getKey());
-                                String uid=entry.getKey();
-                                String name=entry.getValue();
-                                if(usersMap.containsKey(uid) && name.equals(roommates.get(item)))
-                                {
-                                    uidResult=uid;
-                                    nameResult=name;
-                                    break;
+                                uidResult=uid;
+                                nameResult=name;
+                                break;
 
-                                }
                             }
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
-                return true;
-            }
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+            return true;
         });
         back.setOnClickListener((v1)->{
             if(!uidResult.isEmpty() && !nameResult.isEmpty())
@@ -476,46 +467,37 @@ public class managerPage extends AppCompatActivity {
         listViewRoomate=(ListView)d.findViewById(R.id.listviewchoose);
         adapter=new ArrayAdapter<>(managerPage.this, android.R.layout.simple_list_item_1,roommates);
         listViewRoomate.setAdapter(adapter);
-        listViewRoomate.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        listViewRoomate.setOnItemLongClickListener((parent, view1, position, id) -> {
 
-                final int item=position;
-                new AlertDialog.Builder(managerPage.this)
-                        .setIcon(android.R.drawable.ic_delete)
-                        .setTitle("Are you sure ?")
-                        .setMessage("Do you want to delete this roomie")
-                        .setPositiveButton("Yes",new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                System.out.println("111111111");
-                                for(Map.Entry<String,String> entry: usersMap.entrySet())
-                                {
-                                    String uid=entry.getKey();
-                                    String name=entry.getValue();
-                                    if(usersMap.containsKey(uid) && name.equals(roommates.get(item)))
-                                    {
-                                        deleteMapUser.put(uid,name);
-                                        usersMap.remove(uid);
-                                        break;
-                                    }
-                                }
-                                roommates.remove(item);
-                                adapter.notifyDataSetChanged();
+            final int item=position;
+            new AlertDialog.Builder(managerPage.this)
+                    .setIcon(android.R.drawable.ic_delete)
+                    .setTitle("Are you sure ?")
+                    .setMessage("Do you want to delete this roomie")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        System.out.println("111111111");
+                        for(Map.Entry<String,String> entry: usersMap.entrySet())
+                        {
+                            String uid=entry.getKey();
+                            String name=entry.getValue();
+                            if(usersMap.containsKey(uid) && name.equals(roommates.get(item)))
+                            {
+                                deleteMapUser.put(uid,name);
+                                usersMap.remove(uid);
+                                break;
                             }
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
-                return true;
-            }
+                        }
+                        roommates.remove(item);
+                        adapter.notifyDataSetChanged();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+            return true;
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                delete_from_firebase();
-                d.dismiss();
-            }
+        cancel.setOnClickListener(v -> {
+            delete_from_firebase();
+            d.dismiss();
         });
     }
 }

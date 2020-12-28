@@ -1,5 +1,6 @@
 package com.example.rommies;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InfoAdapter extends ArrayAdapter<lastinfo> {
-    private static  final String TAG="InfoAdapter";
-    private Context mContext;
-    private int mResource;
-    //private Object LayoutInflater;
+    private final Context mContext;
+    private final int mResource;
 
     public InfoAdapter(@NonNull Context context, int resource, @NonNull List<lastinfo> objects) {
 
@@ -25,6 +23,7 @@ public class InfoAdapter extends ArrayAdapter<lastinfo> {
         mContext=context;
         mResource=resource;
     }
+    @SuppressLint("ViewHolder")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

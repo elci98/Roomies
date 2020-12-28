@@ -18,16 +18,15 @@ import com.google.firebase.database.ValueEventListener;
 public class JoinAprActivity extends AppCompatActivity {
 
     private Button join;
-    private Button check;
     private EditText aprCode;
     private DatabaseReference dbRef;
-    private DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("Users");
+    private final DatabaseReference reference=FirebaseDatabase.getInstance().getReference().child("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_to_exist_apartment);
-        check = findViewById(R.id.checkCode);
+        Button check = findViewById(R.id.checkCode);
         join = findViewById(R.id.joinButton);
         aprCode = findViewById(R.id.CODE);
 

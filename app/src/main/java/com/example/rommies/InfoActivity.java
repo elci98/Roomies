@@ -6,12 +6,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,8 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,27 +26,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.SyncTree;
-import com.google.firebase.database.core.view.Event;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class InfoActivity extends AppCompatActivity {
-    private static final String[] paths = {"Other","food","Bills"};
+    private static final String[] paths = {"Other","Food","Bills"};
     private Spinner sp;
-    private Button apply;
     private ListView listv;
-    private Map<String, String> users = new HashMap<>();
-    private ArrayList<lastinfo> linfo =new ArrayList<lastinfo>();
-    private Button btdate,btpayer,btcategory,btprice;
+    private final Map<String, String> users = new HashMap<>();
+    private final ArrayList<lastinfo> linfo = new ArrayList<>();
     private boolean clicker=true;
     private  boolean isManager = false;
-    private Map<String, Payment> payments = new HashMap<>();
+    private final Map<String, Payment> payments = new HashMap<>();
     private String key_ap;
     private TextView tvManager;
     private InfoAdapter adapter;
@@ -62,11 +53,11 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
         adapter = new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
         key_ap = getIntent().getExtras().getString("com.app.java.Info.key");
-        btdate=findViewById(R.id.btndate);
-        btcategory=findViewById(R.id.btncatergory);
-        btpayer=findViewById(R.id.btnbuyer);
-        btprice=findViewById(R.id.btnprice);
-        apply=findViewById(R.id.btnapply);
+        Button btdate = findViewById(R.id.btndate);
+        Button btcategory = findViewById(R.id.btncatergory);
+        Button btpayer = findViewById(R.id.btnbuyer);
+        Button btprice = findViewById(R.id.btnprice);
+        Button apply = findViewById(R.id.btnapply);
         listv=findViewById(R.id.listes);
         listv.setAdapter(adapter);
         tvManager = findViewById(R.id.textViewManager);
@@ -103,14 +94,13 @@ public class InfoActivity extends AppCompatActivity {
                     {
                         if(!(i+1==pay.getParticipant().size()))
                         {
-                            sb.append(users.get(pay.getParticipant().get(i))+" , ");
+                            sb.append(users.get(pay.getParticipant().get(i))).append(" , ");
                         }
                         else
                         {
                             sb.append(users.get(pay.getParticipant().get(i)));
                         }
                     }
-
                     lf.setAmount(pay.getAmount());
                     lf.setPayer(users.get(pay.getPayer()));
                     lf.setDate(pay.getDate());
@@ -120,7 +110,6 @@ public class InfoActivity extends AppCompatActivity {
                     linfo.add(lf);
 
                 }
-//                InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
                 adapter.notifyDataSetChanged();
                 listv.setOnItemLongClickListener((parent, view1, pos, id) -> {
                     if(!isManager)return false;
@@ -141,230 +130,128 @@ public class InfoActivity extends AppCompatActivity {
         });
 
         sp = (Spinner)findViewById(R.id.spinner2);
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(InfoActivity.this, android.R.layout.simple_spinner_item,paths);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(InfoActivity.this, android.R.layout.simple_spinner_item, paths);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter1);
-        apply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String category=sp.getSelectedItem().toString();
-                linfo.clear();
-                rootRef.orderByChild("reason").equalTo(category).addValueEventListener(new ValueEventListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            Payment pay = ds.getValue(Payment.class);
-                            lastinfo lf=new lastinfo();
-                            StringBuilder sb = new StringBuilder();
-                            for(int i= 0 ; i<pay.getParticipant().size() ; i++)
+        apply.setOnClickListener(v -> {
+            String category=sp.getSelectedItem().toString();
+            linfo.clear();
+            rootRef.orderByChild("reason").equalTo(category).addListenerForSingleValueEvent(new ValueEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Payment pay = ds.getValue(Payment.class);
+                        lastinfo lf=new lastinfo();
+                        StringBuilder sb = new StringBuilder();
+                        for(int i= 0 ; i<pay.getParticipant().size() ; i++)
+                        {
+                            if(pay.getParticipant().size() != i+1)
                             {
-                                if(pay.getParticipant().size() != i+1)
-                                {
-                                    sb.append(users.get(pay.getParticipant().get(i))+" , ");
-                                }
-                                else {
-                                    sb.append(users.get(pay.getParticipant().get(i)));
-                                }
+                                sb.append(users.get(pay.getParticipant().get(i))).append(" , ");
                             }
-                            lf.setAmount(pay.getAmount());
-                            lf.setPayer(users.get(pay.getPayer()));
-                            lf.setDate(pay.getDate());
-                            lf.setReason(pay.getReason());
-                            lf.setPartic(sb.toString());
-                            lf.setKey(pay.getKey());
-                            linfo.add(lf);
-                        }
-//                            InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
-//                            listv.setAdapter(adapt);
-                            adapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-            }
-        });
-        btprice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(clicker) {
-                    clicker=false;
-
-                    Collections.sort(linfo, new Comparator<lastinfo>() {
-                        @Override
-                        public int compare(lastinfo o1, lastinfo o2) {
-                            if (o1.getAmount() - o2.getAmount() > 0) {
-                                return 1;
+                            else {
+                                sb.append(users.get(pay.getParticipant().get(i)));
                             }
-                            if (o1.getAmount() - o2.getAmount() < 0) {
-                                return -1;
-                            }
-                            return 0;
                         }
-                    });
-                }else{
-                    clicker=true;
-                    Collections.sort(linfo, new Comparator<lastinfo>() {
-                        @Override
-                        public int compare(lastinfo o1, lastinfo o2) {
-                            if (o1.getAmount() - o2.getAmount() < 0) {
-                                return 1;
-                            }
-                            if (o1.getAmount() - o2.getAmount() > 0) {
-                                return -1;
-                            }
-                            return 0;
-                        }
-                    });
+                        lf.setAmount(pay.getAmount());
+                        lf.setPayer(users.get(pay.getPayer()));
+                        lf.setDate(pay.getDate());
+                        lf.setReason(pay.getReason());
+                        lf.setPartic(sb.toString());
+                        lf.setKey(pay.getKey());
+                        linfo.add(lf);
+                    }
+                        adapter.notifyDataSetChanged();
                 }
-//                InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
-//                listv.setAdapter(adapt);
-                adapter.notifyDataSetChanged();
-                //Collections.sort(linfo);
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
         });
-        btpayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (clicker) {
-                    clicker=false;
-
-                    Collections.sort(linfo, new Comparator<lastinfo>() {
-                        @Override
-                        public int compare(lastinfo o1, lastinfo o2) {
-                            return o1.getPayer().compareToIgnoreCase(o2.getPayer());
-                        }
-
-                    });
-
-
-                }else{
-                    clicker=true;
-                    Collections.sort(linfo, new Comparator<lastinfo>(){
-                        @Override
-                        public int compare(lastinfo o1, lastinfo o2) {
-                            if(o2.getPayer().compareToIgnoreCase(o1.getPayer())>0)
-                            {
-                                return 1;
-                            }if(o2.getPayer().compareToIgnoreCase(o1.getPayer())<0){
-                                return -1;
-                            }
-                            return 0;
-                        }
-
-                    });
-                }
-//                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
-//                listv.setAdapter(adapt);
-                adapter.notifyDataSetChanged();
-
+        btprice.setOnClickListener(v -> {
+            if(clicker) {
+                clicker=false;
+                Collections.sort(linfo, (o1, o2) -> {
+                    if (o1.getAmount() - o2.getAmount() > 0) {
+                        return 1;
+                    }
+                    if (o1.getAmount() - o2.getAmount() < 0) {
+                        return -1;
+                    }
+                    return 0;
+                });
+            }else{
+                clicker=true;
+                Collections.sort(linfo, (o1, o2) -> {
+                    if (o1.getAmount() - o2.getAmount() < 0) {
+                        return 1;
+                    }
+                    if (o1.getAmount() - o2.getAmount() > 0) {
+                        return -1;
+                    }
+                    return 0;
+                });
             }
+            adapter.notifyDataSetChanged();
         });
-        btdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(clicker) {
-                    clicker = false;
-
-                    Collections.sort(linfo, new Comparator<lastinfo>() {
-                        @Override
-                        public int compare(lastinfo o1, lastinfo o2) {
-                            if (o1.getDate().getYear() < o2.getDate().getYear()) {
-                                return 1;
-                            }
-                            if (o1.getDate().getYear() > o2.getDate().getYear()) {
-                                return -1;
-                            }
-                            if (o1.getDate().getMonth() < o2.getDate().getMonth()) {
-                                return 1;
-                            }
-                            if (o1.getDate().getMonth() > o2.getDate().getMonth()) {
-                                return -1;
-                            }
-                            if (o1.getDate().getDay() < o2.getDate().getDay()) {
-                                return 1;
-                            }
-                            if (o1.getDate().getDay() > o2.getDate().getDay()) {
-                                return -1;
-                            }
-
-                            return 0;
-                        }
-
-                    });
-                }else{
-                    clicker=true;
-                    Collections.sort(linfo, new Comparator<lastinfo>() {
-                        @Override
-                        public int compare(lastinfo o1, lastinfo o2) {
-                            if (o1.getDate().getYear() > o2.getDate().getYear()) {
-                                return 1;
-                            }
-                            if (o1.getDate().getYear() < o2.getDate().getYear()) {
-                                return -1;
-                            }
-                            if (o1.getDate().getMonth() > o2.getDate().getMonth()) {
-                                return 1;
-                            }
-                            if (o1.getDate().getMonth() < o2.getDate().getMonth()) {
-                                return -1;
-                            }
-                            if (o1.getDate().getDay() > o2.getDate().getDay()) {
-                                return 1;
-                            }
-                            if (o1.getDate().getDay() < o2.getDate().getDay()) {
-                                return -1;
-                            }
-
-                            return 0;
-                        }
-
-                    });
-
-                }
-//                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
-//                listv.setAdapter(adapt);
-                adapter.notifyDataSetChanged();
+        btpayer.setOnClickListener(v -> {
+            if (clicker) {
+                clicker=false;
+                Collections.sort(linfo, (o1, o2) -> o1.getPayer().compareToIgnoreCase(o2.getPayer()));
+            }else{
+                clicker=true;
+                Collections.sort(linfo, (o1, o2) -> Integer.compare(o2.getPayer().compareToIgnoreCase(o1.getPayer()), 0));
             }
+            adapter.notifyDataSetChanged();
         });
-        btcategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (clicker) {
-                    clicker=false;
-
-                    Collections.sort(linfo, new Comparator<lastinfo>() {
-                        @Override
-                        public int compare(lastinfo o1, lastinfo o2) {
-                            return o1.getReason().compareToIgnoreCase(o2.getReason());
-                        }
-
-                    });
-
-
-                }else{
-                    clicker=true;
-                    Collections.sort(linfo, new Comparator<lastinfo>(){
-                        @Override
-                        public int compare(lastinfo o1, lastinfo o2) {
-                            if(o2.getReason().compareToIgnoreCase(o1.getReason())>0)
-                            {
-                                return 1;
-                            }if(o2.getReason().compareToIgnoreCase(o1.getReason())<0){
-                                return -1;
-                            }
-                            return 0;
-                        }
-
-                    });
-                }
-//                InfoAdapter adapt = new InfoAdapter(InfoActivity.this, R.layout.item_layout, linfo);
-//                listv.setAdapter(adapt);
-                adapter.notifyDataSetChanged();
+        btdate.setOnClickListener(v -> {
+            if(clicker) {
+                clicker = false;
+                Collections.sort(linfo, (o1, o2) -> {
+                    if (o1.getDate().getYear() < o2.getDate().getYear()) {
+                        return 1;
+                    }
+                    if (o1.getDate().getYear() > o2.getDate().getYear()) {
+                        return -1;
+                    }
+                    if (o1.getDate().getMonth() < o2.getDate().getMonth()) {
+                        return 1;
+                    }
+                    if (o1.getDate().getMonth() > o2.getDate().getMonth()) {
+                        return -1;
+                    }
+                    return Integer.compare(o2.getDate().getDay(), o1.getDate().getDay());
+                });
+            }else{
+                clicker=true;
+                Collections.sort(linfo, (o1, o2) -> {
+                    if (o1.getDate().getYear() > o2.getDate().getYear()) {
+                        return 1;
+                    }
+                    if (o1.getDate().getYear() < o2.getDate().getYear()) {
+                        return -1;
+                    }
+                    if (o1.getDate().getMonth() > o2.getDate().getMonth()) {
+                        return 1;
+                    }
+                    if (o1.getDate().getMonth() < o2.getDate().getMonth()) {
+                        return -1;
+                    }
+                    return Integer.compare(o1.getDate().getDay(), o2.getDate().getDay());
+                });
             }
+            adapter.notifyDataSetChanged();
+        });
+        btcategory.setOnClickListener(v -> {
+            if (clicker) {
+                clicker=false;
+
+                Collections.sort(linfo, (o1, o2) -> o1.getReason().compareToIgnoreCase(o2.getReason()));
+            }else{
+                clicker=true;
+                Collections.sort(linfo, (o1, o2) -> Integer.compare(o2.getReason().compareToIgnoreCase(o1.getReason()), 0));
+            }
+            adapter.notifyDataSetChanged();
         });
     }
 
@@ -412,10 +299,8 @@ public class InfoActivity extends AppCompatActivity {
                                 Log.d("trDebug", "runTransaction: " + error);
                             else
                                 Log.d("trDebug", "runTransaction completed" );
-
                         }
                     });
-
                     String t = other;
                     other = payer;
                     payer = t;

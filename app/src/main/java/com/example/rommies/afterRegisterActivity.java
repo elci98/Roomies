@@ -13,8 +13,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,10 +49,9 @@ public class afterRegisterActivity extends AppCompatActivity
     private static final int REQUEST_READ_CONTACTS = 1;
     private static final int REQUEST_SEND_SMS = 2;
     private static final String DEBUG_TAG = "MY_DEBUG";
-    private Button create, join;
     private EditText etAprName;
     private Dialog d;
-    private Map<String, String> contacts = new HashMap<>();
+    private final Map<String, String> contacts = new HashMap<>();
     private ProgressBar pb;
     private String aprKey, Name;
     private DatabaseReference dbRef, reference;
@@ -72,17 +69,17 @@ public class afterRegisterActivity extends AppCompatActivity
             @Override
             public void handleOnBackPressed()
             {
-                new AlertDialog.Builder(afterRegisterActivity.this).setTitle("Exit").
-                        setMessage("Do you want to exit from Rommies?").
-                        setCancelable(false).
-                        setPositiveButton("Yes", (dialog, id)-> finish())
-                        .setNegativeButton("No", (dialog, id)-> {dialog.cancel();return;}).
-                        create().
-                        show();
+                new AlertDialog.Builder(afterRegisterActivity.this).setTitle("Exit")
+                        .setMessage("Do you want to exit from Rommies?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", (dialog, id)-> finish())
+                        .setNegativeButton("No", (dialog, id)-> dialog.cancel())
+                        .create()
+                        .show();
             }
         });
-        create = findViewById(R.id.createApr);
-        join = findViewById(R.id.joinApr);
+        Button create = findViewById(R.id.createApr);
+        Button join = findViewById(R.id.joinApr);
         mAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid());
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -206,70 +203,66 @@ public class afterRegisterActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK)
         {
-            switch (requestCode)
-            {
-                case CONTACT_PICKER_RESULT:
-                    Cursor phones = null, names = null;
-                    String number = null, name;
-                    try {
-                        Uri result = data.getData();
-                        Log.v(DEBUG_TAG, "Got a contact result: " + result.toString());
-                        String id = result.getLastPathSegment();
-                        phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[]{id}, null);
-                        if(phones.moveToFirst())
+            if (requestCode == CONTACT_PICKER_RESULT) {
+                Cursor phones = null;
+                String number = null, name;
+                try {
+                    Uri result = data.getData();
+                    Log.v(DEBUG_TAG, "Got a contact result: " + result.toString());
+                    String id = result.getLastPathSegment();
+                    phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[]{id}, null);
+                    if (phones.moveToFirst()) {
+                        name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                        number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        Log.v(DEBUG_TAG, "Got phone number: " + number);
+                        Log.v(DEBUG_TAG, "Got User name: " + name);
+                        if (contacts.containsValue(number)) {
+                            Toast.makeText(this, "This phone number is already on the list", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        contacts.put(name, number);
+
+                        LinearLayout ll = d.findViewById(R.id.linearLayout);
+                        RelativeLayout rl = new RelativeLayout(d.getContext());
+                        //TextView 1
+                        TextView tv1 = new TextView(d.getContext());
+                        tv1.setText(name);
+                        tv1.setTextAppearance(getApplicationContext(), R.style.TextAppearance_AppCompat_Medium);
+                        tv1.setId(1);
+                        //remove "button"
+
+                        Button bt = new Button(d.getContext(), null, android.R.style.Widget_Material_Light_Button_Small);
+                        bt.setBackgroundResource(R.drawable.ic_baseline_delete_24);
+                        bt.setOnClickListener((v) ->
                         {
-                            name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                            number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            Log.v(DEBUG_TAG, "Got phone number: " + number);
-                            Log.v(DEBUG_TAG, "Got User name: " + name);
-                            if(contacts.containsValue(number)) {
-                                Toast.makeText(this, "This phone number is already on the list", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            contacts.put(name, number);
-
-                            LinearLayout ll = d.findViewById(R.id.linearLayout);
-                            RelativeLayout rl = new RelativeLayout(d.getContext());
-                            //TextView 1
-                            TextView tv1 = new TextView(d.getContext());
-                            tv1.setText(name);
-                            tv1.setTextAppearance(getApplicationContext(),R.style.TextAppearance_AppCompat_Medium);
-                            tv1.setId(1);
-                            //remove "button"
-
-                            Button bt = new Button(d.getContext(),null,android.R.style.Widget_Material_Light_Button_Small);
-                            bt.setBackgroundResource(R.drawable.ic_baseline_delete_24);
-                            bt.setOnClickListener((v)->
-                            {
-                                contacts.remove(name);
-                                ll.removeView(rl);
-                            });
-                            RelativeLayout.LayoutParams rl_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            RelativeLayout.LayoutParams tv_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            RelativeLayout.LayoutParams bt_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            tv_lp.setMargins(40, 0,0,0);
-                            bt_lp.setMargins(30,0,0,0);
-                            bt_lp.addRule(RelativeLayout.RIGHT_OF, 1);
-                            rl.addView(tv1,tv_lp);
-                            rl.addView(bt,bt_lp);
-                            ll.addView(rl, rl_lp);
-                        } else {
-                            Log.w(DEBUG_TAG, "No results");
-                        }
-
-                    } catch (Exception e) {
-                        Log.e(DEBUG_TAG, "Failed to get phone number data", e);
-                    } finally {
-                        if (phones != null) {
-                            phones.close();
-                        }
-                        if (number.length() == 0) {
-                            Toast.makeText(this, "No phone number found for contact.",
-                                    Toast.LENGTH_LONG).show();
-                        }
+                            contacts.remove(name);
+                            ll.removeView(rl);
+                        });
+                        RelativeLayout.LayoutParams rl_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams tv_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams bt_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        tv_lp.setMargins(40, 0, 0, 0);
+                        bt_lp.setMargins(30, 0, 0, 0);
+                        bt_lp.addRule(RelativeLayout.RIGHT_OF, 1);
+                        rl.addView(tv1, tv_lp);
+                        rl.addView(bt, bt_lp);
+                        ll.addView(rl, rl_lp);
+                    } else {
+                        Log.w(DEBUG_TAG, "No results");
                     }
-                break;
+
+                } catch (Exception e) {
+                    Log.e(DEBUG_TAG, "Failed to get phone number data", e);
+                } finally {
+                    if (phones != null) {
+                        phones.close();
+                    }
+                    if (number.length() == 0) {
+                        Toast.makeText(this, "No phone number found for contact.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         }
         else {

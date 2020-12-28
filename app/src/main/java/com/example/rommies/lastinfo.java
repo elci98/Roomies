@@ -10,13 +10,6 @@ public class lastinfo {
     private String key;
 
     public lastinfo(){}
-    public lastinfo(double amount, String payer, String reason, Date date, String part) {
-        this.amount = amount;
-        Payer = payer;
-        Reason = reason;
-        this.date = date;
-        this.partic=part;
-    }
 
     public String getPartic() {
         return partic;

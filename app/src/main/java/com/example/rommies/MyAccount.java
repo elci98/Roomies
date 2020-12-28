@@ -3,12 +3,10 @@ package com.example.rommies;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.fonts.SystemFonts;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +28,6 @@ public class MyAccount extends AppCompatActivity {
     int index;
     String Myname, Uid;
     StringBuilder stringBuilder;
-    private String key_ap;
     private Map<String, String> users = new HashMap<>();
     private HashMap<String, HashMap<String, Double>> Balance;
 
@@ -49,7 +46,7 @@ public class MyAccount extends AppCompatActivity {
         Uid = mAuth.getUid();
         System.out.println(Uid);
         Dref = FirebaseDatabase.getInstance().getReference().child("Users").child(Uid);
-        key_ap = getIntent().getExtras().getString("com.app.java.acc.key");
+        String key_ap = getIntent().getExtras().getString("com.app.java.acc.key");
         users = (Map<String, String>) getIntent().getExtras().get("com.app.java.acc.users");
         users.put(Uid, "12");
         if (getIntent().hasExtra("position_rommie") && getIntent().hasExtra("name_roomie")) {
@@ -102,7 +99,7 @@ public class MyAccount extends AppCompatActivity {
         if (index != -1 && !names.isEmpty()) {
 
             if (curent_name.equals(names.get(index))) {
-                myaccount.setText("My Account");
+                myaccount.setText(R.string.myAccount);
                 for (Map.Entry<String, Double> us : Balance.get(Uid).entrySet()) {
                     for(Map.Entry<String,String> name: users.entrySet() )
                     {
@@ -120,14 +117,15 @@ public class MyAccount extends AppCompatActivity {
                         DecimalFormat df = new DecimalFormat("#.##");
                         final Double Money = Balance.get(name.getKey()).get(Uid);
                         if(Money > 0 )
-                            stringBuilder.append(names.get(index)+ " Owe you  "+ df.format(Money) +" nis \n");
+                            stringBuilder.append(names.get(index)).append(" Owe you  ").append(df.format(Money)).append(" nis \n");
                         else if(Money < 0)
-                            stringBuilder.append("You owe to "+names.get(index)+ ": " + df.format(Math.abs(Money)) +" nis \n");
+                            stringBuilder.append("You owe to ").append(names.get(index)).append(": ").append(df.format(Math.abs(Money))).append(" nis \n");
                         else
-                            stringBuilder.append("You and "+names.get(index)+ " are even." +"\n");
+                            stringBuilder.append("You and ").append(names.get(index)).append(" are even.").append("\n");
                     }
                 }
-                myaccount.setText(names.get(index) + " Account");
+                String txt = names.get(index) + " Account";
+                myaccount.setText(txt);
             }
             message.setText(stringBuilder.toString());
         }

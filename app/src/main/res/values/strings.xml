@@ -8,7 +8,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="x">x<font color='#FF0000'></font></string>
+    <string name="x">x<font color='#FF0000' /></string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
@@ -18,5 +18,7 @@
     <string name="create">CREATE</string>
     <string name="email">Email</string>
     <string name="addDate">Add Date</string>
+    <string name="txt">\"Hello \"</string>
+    <string name="myAccount">My Account</string>
 
 </resources>
