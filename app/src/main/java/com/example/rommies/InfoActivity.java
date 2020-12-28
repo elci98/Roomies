@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InfoActivity extends AppCompatActivity {
-    private static final String[] paths = {"Other","Food","Bills"};
+    private static final String[] paths = {"Other","Food","Bills","All"};
     private Spinner sp;
     private ListView listv;
     private final Map<String, String> users = new HashMap<>();
@@ -136,6 +136,58 @@ public class InfoActivity extends AppCompatActivity {
         apply.setOnClickListener(v -> {
             String category=sp.getSelectedItem().toString();
             linfo.clear();
+            if(category=="All")
+                {
+                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot ds : snapshot.getChildren()) {
+
+                                Payment pay = ds.getValue(Payment.class);
+                                payments.put(pay.getKey(),pay);
+                                lastinfo lf=new lastinfo();
+                                StringBuilder sb = new StringBuilder();
+                                for(int i= 0 ; i<pay.getParticipant().size() ;i++)
+                                {
+                                    if(!(i+1==pay.getParticipant().size()))
+                                    {
+                                        sb.append(users.get(pay.getParticipant().get(i))+" , ");
+                                    }
+                                    else
+                                    {
+                                        sb.append(users.get(pay.getParticipant().get(i)));
+                                    }
+                                }
+
+                                lf.setAmount(pay.getAmount());
+                                lf.setPayer(users.get(pay.getPayer()));
+                                lf.setDate(pay.getDate());
+                                lf.setReason(pay.getReason());
+                                lf.setPartic(sb.toString());
+                                lf.setKey(pay.getKey());
+                                linfo.add(lf);
+
+                            }
+//                InfoAdapter adapt=new InfoAdapter(InfoActivity.this,R.layout.item_layout,linfo);
+                            adapter.notifyDataSetChanged();
+                            listv.setOnItemLongClickListener((parent, view1, pos, id) -> {
+                                if(!isManager)return false;
+                                new AlertDialog.Builder(InfoActivity.this)
+                                        .setIcon(android.R.drawable.ic_delete)
+                                        .setTitle("Are you sure you want to delete this payment?")
+                                        .setMessage("this will recalculate balances")
+                                        .setPositiveButton("Yes", (dialog, which) -> deletePayment(pos))
+                                        .setNegativeButton("No", null)
+                                        .show();
+                                return true;
+                            });
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
             rootRef.orderByChild("reason").equalTo(category).addListenerForSingleValueEvent(new ValueEventListener() {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
