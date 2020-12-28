@@ -46,7 +46,6 @@ public class PurchaseActivity extends AppCompatActivity implements DatePickerDia
     private DatabaseReference userRef,aprRef;
 
     private Spinner spinner;
-    private LinearLayout linear;
     private static final String[] paths = {"Other","Food","Bills"};
 
 
@@ -105,7 +104,6 @@ public class PurchaseActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        linear=findViewById(R.id.linearl);
         spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setPrompt("Select categore");
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(PurchaseActivity.this, android.R.layout.simple_spinner_item,paths);

@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InfoActivity extends AppCompatActivity {
-    private static final String[] paths = {"other","food","Bills"};
+    private static final String[] paths = {"Other","food","Bills"};
     private Spinner sp;
     private Button apply;
     private ListView listv;
@@ -90,7 +90,7 @@ public class InfoActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) { }
         });
 
-        rootRef.addValueEventListener(new ValueEventListener() {
+        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
@@ -127,7 +127,7 @@ public class InfoActivity extends AppCompatActivity {
                     new AlertDialog.Builder(InfoActivity.this)
                             .setIcon(android.R.drawable.ic_delete)
                             .setTitle("Are you sure you want to delete this payment?")
-                            .setMessage("this wil recalculate balances")
+                            .setMessage("this will recalculate balances")
                             .setPositiveButton("Yes", (dialog, which) -> deletePayment(pos))
                             .setNegativeButton("No", null)
                             .show();
