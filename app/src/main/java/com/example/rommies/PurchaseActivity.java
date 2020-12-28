@@ -47,7 +47,7 @@ public class PurchaseActivity extends AppCompatActivity implements DatePickerDia
 
     private Spinner spinner;
     private LinearLayout linear;
-    private static final String[] paths = {"other","food"};
+    private static final String[] paths = {"Other","Food","Bills"};
 
 
     private String userID;
