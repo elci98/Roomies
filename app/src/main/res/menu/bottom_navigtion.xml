@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/friends_btn"
+        android:icon="@drawable/ic_baseline_people_24"
+        android:title="friends"
+        />
+
+    <item
+        android:id="@+id/balance_btn"
+        android:icon="@drawable/ic_baseline_account_balance_24"
+        android:title="balance"
+        />
+
+    <item
+        android:id="@+id/account_btn"
+        android:icon="@drawable/ic_baseline_account_box_24"
+        android:title="account"
+        />
+    <item
+        android:id="@+id/activity_btn"
+        android:icon="@drawable/ic_activity_svgrepo_com"
+        android:title="activity"
+        />
+</menu>
