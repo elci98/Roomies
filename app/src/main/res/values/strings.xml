@@ -18,7 +18,7 @@
     <string name="create">CREATE</string>
     <string name="email">Email</string>
     <string name="addDate">Add Date</string>
-    <string name="txt">\"Hello \"</string>
+    <string name="txt">Hello </string>
     <string name="myAccount">My Account</string>
 
 </resources>
