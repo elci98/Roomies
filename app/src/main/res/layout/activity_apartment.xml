@@ -4,49 +4,343 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="@drawable/my_photo4"
     tools:context=".ApartmentActivity">
 
 
-    <TextView
-        android:id="@+id/ApartamenTextView"
-        android:layout_width="176dp"
-        android:layout_height="62dp"
-        android:gravity="center"
-        android:text="TextView"
-        android:textAllCaps="false"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.14" />
+
 
     <LinearLayout
-        android:layout_width="365dp"
-        android:layout_height="396dp"
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
+        android:layout_marginTop="118dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.564">
+        app:layout_constraintVertical_bias="0.541">
 
 
         <ListView
             android:id="@+id/listApart"
-            android:layout_width="294dp"
-            android:layout_height="260dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="70dp"
-            android:layout_marginRight="20dp">
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+
+            android:background="#80F7EFEF">
 
         </ListView>
 
+        <ScrollView
+            android:id="@+id/linearLayoutScroll"
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:visibility="gone"
+            android:background="#80F7EFEF"
+
+            >
+
+            <LinearLayout
+                android:id="@+id/linearlayout4"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="225dp"
+
+                    >
+                    <TextView
+                        android:id="@+id/textViewTotalBalance"
+                        android:layout_width="123dp"
+                        android:layout_height="34dp"
+                        android:layout_marginLeft="170dp"
+                        android:layout_marginTop="65dp"
+                        android:text="Total balance"
+                        android:fontFamily="@font/sourcesanspro_semibold"
+
+                        android:textColor="@color/txt"
+                        android:textSize="18sp"
+
+
+                        />
+
+                    <TextView
+                        android:id="@+id/totalbalanceprice"
+                        android:layout_width="79dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="170dp"
+                        android:layout_marginTop="123dp"
+                        android:fontFamily="@font/sourcesanspro_bold"
+                        android:gravity="bottom"
+                        android:text="price"
+                        android:textAllCaps="false"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imageView12"
+                        android:layout_width="126dp"
+                        android:layout_height="112dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="62dp"
+                        android:layout_marginRight="260dp"
+
+                        app:srcCompat="@drawable/graph_balance" />
+
+                    <TextView
+                        android:id="@+id/shekelprice"
+                        android:layout_width="85dp"
+                        android:layout_height="31dp"
+                        android:layout_marginLeft="250dp"
+                        android:layout_marginTop="120dp"
+                        android:fontFamily="@font/sourcesanspro_bold"
+                        android:textSize="19sp"
+                        android:text="shekel" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/linearLayoutScroll2"
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:visibility="gone"
+            android:background="#80F7EFEF">
+
+            <LinearLayout
+                android:id="@+id/linearlayout5"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"
+                android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="225dp"
+
+                >
+
+                <TextView
+                    android:id="@+id/textFullName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sourcesanspro_bold"
+                    android:text="Full name"
+
+                    android:textSize="12dp"
+                    android:textStyle="bold">
+
+                </TextView>
+
+                <EditText
+                    android:id="@+id/Editfullname"
+                    android:layout_width="124dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/focus_input"
+                    android:drawableLeft="@drawable/ic_baseline_account_circle_24"
+                    android:drawablePadding="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textSize="10sp"
+
+                    android:textStyle="bold"
+                    android:visibility="gone">
+
+
+                </EditText>
+
+                <TextView
+                    android:id="@+id/TextMyCurrentName"
+                    android:layout_width="124dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/sourcesanspro_bold"
+
+                    />
+
+                <ImageButton
+                    android:id="@+id/imageEdit1"
+                    android:layout_width="35dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="125dp"
+                    android:layout_marginTop="21dp"
+
+                    android:background="#0000"
+                    android:src="@drawable/ic_outline_edit_24" />
+
+                <TextView
+                    android:id="@+id/TextEmailaddres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:fontFamily="@font/sourcesanspro_bold"
+                    android:text="Email address"
+                    android:textSize="12dp"
+
+                    >
+
+                </TextView>
+
+                <EditText
+                    android:id="@+id/EditEmailadress"
+                    android:layout_width="124dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="70dp"
+                    android:background="@drawable/focus_input"
+                    android:drawableLeft="@drawable/ic_baseline_email_24"
+                    android:drawablePadding="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone">
+
+                </EditText>
+
+                <TextView
+                    android:id="@+id/TextMyCurrentEmail"
+                    android:layout_width="124dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="70dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/sourcesanspro_bold"
+                    />
+
+                <ImageButton
+                    android:id="@+id/imageEdit2"
+                    android:layout_width="35dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="125dp"
+                    android:layout_marginTop="70dp"
+                    android:background="#0000"
+                    android:src="@drawable/ic_outline_edit_24" />
+
+                <TextView
+                    android:id="@+id/TextPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="100dp"
+                    android:fontFamily="@font/sourcesanspro_bold"
+                    android:text="Password"
+                    android:textSize="12dp"
+
+                    >
+
+                </TextView>
+
+                <EditText
+                    android:id="@+id/editPasswordold"
+                    android:layout_width="124dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="120dp"
+                    android:background="@drawable/focus_input"
+                    android:drawableLeft="@drawable/ic_baseline_lock_24"
+                    android:drawablePadding="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textSize="10sp"
+
+                    android:textStyle="bold"
+                    android:visibility="gone">
+
+                </EditText>
+
+                <EditText
+                    android:id="@+id/editPasswordnew"
+                    android:layout_width="124dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="150dp"
+                    android:background="@drawable/focus_input"
+                    android:drawableLeft="@drawable/ic_baseline_lock_24"
+                    android:drawablePadding="12dp"
+
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone">
+
+                </EditText>
+
+                <ImageButton
+                    android:id="@+id/imageEdit3"
+                    android:layout_width="35dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="125dp"
+                    android:layout_marginTop="120dp"
+                    android:background="#0000"
+                    android:src="@drawable/ic_outline_edit_24"
+                    />
+
+                <TextView
+                    android:id="@+id/TextMyCurrentPass"
+                    android:layout_width="124dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="120dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+
+                    android:fontFamily="@font/sourcesanspro_bold"
+                    />
+
+                <Button
+                    android:id="@+id/savechange"
+                    android:layout_width="95dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="195dp"
+                    android:gravity="start"
+                    android:shadowColor="@color/txt"
+                    android:text="Save change"
+                    android:textSize="8dp" />
+
+            </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/ApartamenTextView"
+        android:layout_width="295dp"
+        android:layout_height="130dp"
+        android:fontFamily="@font/source_sans_pro_black"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="#F7EFEF"
+        android:textSize="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.115" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.998"
+        app:menu="@menu/bottom_navigtion"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-16dp" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
