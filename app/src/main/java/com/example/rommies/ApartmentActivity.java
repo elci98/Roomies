@@ -236,9 +236,6 @@ public class ApartmentActivity extends AppCompatActivity {
                         String newemail=emailchange.getText().toString().trim();
                         String oldpass=oldpassword.getText().toString().trim();
                         String newpass=newpassword.getText().toString().trim();
-//
-
-
 
                         if(!oldpass.isEmpty() && !newpass.isEmpty())
                         {
@@ -273,7 +270,7 @@ public class ApartmentActivity extends AppCompatActivity {
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                   
+
                                     Toast.makeText(getApplicationContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
 
                                 }
@@ -330,6 +327,14 @@ public class ApartmentActivity extends AppCompatActivity {
 
                     });
 
+
+                    oldpassword.setVisibility(View.GONE);
+                    newpassword.setVisibility(View.GONE);
+                    emailchange.setVisibility(View.GONE);
+                    namechange.setVisibility(View.GONE);
+                    password.setVisibility(View.VISIBLE);
+                    name.setVisibility(View.VISIBLE);
+                    email.setVisibility(View.VISIBLE);
                     break;
                 }
 
