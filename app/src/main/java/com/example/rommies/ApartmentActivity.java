@@ -306,6 +306,15 @@ public class ApartmentActivity extends AppCompatActivity {
                             setNewName(newname);
                         }
 
+                        if(newname.isEmpty())
+                            namechange.setVisibility(View.GONE);
+                        if(newemail.isEmpty())
+                            emailchange.setVisibility(View.GONE);
+                        if(oldpass.isEmpty() || newpass.isEmpty())
+                        {
+                            oldpassword.setVisibility(View.GONE);
+                            newpassword.setVisibility(View.GONE);
+                        }
 
                         password.setVisibility(View.VISIBLE);
                         name.setVisibility(View.VISIBLE);
