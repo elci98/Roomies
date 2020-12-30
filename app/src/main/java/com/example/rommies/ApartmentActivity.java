@@ -308,13 +308,22 @@ public class ApartmentActivity extends AppCompatActivity {
 
                         if(newname.isEmpty())
                             namechange.setVisibility(View.GONE);
+
                         if(newemail.isEmpty())
                             emailchange.setVisibility(View.GONE);
+
                         if(oldpass.isEmpty() || newpass.isEmpty())
                         {
                             oldpassword.setVisibility(View.GONE);
                             newpassword.setVisibility(View.GONE);
                         }
+
+                        if(newemail.equals(CurrentEmail))
+                            emailchange.setVisibility(View.GONE);
+
+                        if(newname.equals(CurrentName))
+                            namechange.setVisibility(View.GONE);
+
 
                         password.setVisibility(View.VISIBLE);
                         name.setVisibility(View.VISIBLE);
@@ -322,7 +331,7 @@ public class ApartmentActivity extends AppCompatActivity {
 
                     });
 
-
+                    break;
                 }
 
 
