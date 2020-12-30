@@ -243,7 +243,9 @@ public class ApartmentActivity extends AppCompatActivity {
                         if(!oldpass.isEmpty() && !newpass.isEmpty())
                         {
                             FirebaseUser cUser=mAuth.getCurrentUser();
-
+                            oldpassword.setVisibility(View.GONE);
+                            newpassword.setVisibility(View.GONE);
+                            password.setVisibility(View.VISIBLE);
                             AuthCredential authCredentialpass= EmailAuthProvider.getCredential(cUser.getEmail(),oldpass);
                             cUser.reauthenticate(authCredentialpass)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -254,16 +256,14 @@ public class ApartmentActivity extends AppCompatActivity {
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
-                                                            oldpassword.setVisibility(View.GONE);
-                                                            newpassword.setVisibility(View.GONE);
+
                                                             Toast.makeText(getApplicationContext(),"Password Update...",Toast.LENGTH_SHORT).show();
                                                         }
                                                     })
                                                     .addOnFailureListener(new OnFailureListener() {
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
-                                                            oldpassword.setVisibility(View.GONE);
-                                                            newpassword.setVisibility(View.GONE);
+
                                                             Toast.makeText(getApplicationContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
 
                                                         }
@@ -273,8 +273,7 @@ public class ApartmentActivity extends AppCompatActivity {
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    oldpassword.setVisibility(View.GONE);
-                                    newpassword.setVisibility(View.GONE);
+                                   
                                     Toast.makeText(getApplicationContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
 
                                 }
