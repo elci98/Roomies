@@ -137,14 +137,14 @@ public class ApartmentActivity extends AppCompatActivity {
 //      listViewRoomate.setAdapter(adapter);
         mAuth=FirebaseAuth.getInstance();
 
-        listViewRoomate.setOnItemClickListener((parent, view, position, id) -> {
-            Intent in=new Intent(getApplicationContext(),MyAccount.class);
-            in.putExtra("position_rommie",position);
-            in.putExtra("com.app.java.acc.key",aprKey);
-            in.putStringArrayListExtra("name_roomie",roommates);
-            in.putExtra("com.app.java.acc.users",usersMap);
-            startActivity(in);
-        });
+//        listViewRoomate.setOnItemClickListener((parent, view, position, id) -> {
+//            Intent in=new Intent(getApplicationContext(),MyAccount.class);
+//            in.putExtra("position_rommie",position);
+//            in.putExtra("com.app.java.acc.key",aprKey);
+//            in.putStringArrayListExtra("name_roomie",roommates);
+//            in.putExtra("com.app.java.acc.users",usersMap);
+//            startActivity(in);
+//        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
