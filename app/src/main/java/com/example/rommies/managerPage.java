@@ -111,7 +111,7 @@ public class managerPage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 manager=snapshot.getValue().toString();
-                String txt = getString(R.string.txt)+manager;
+                String txt = getString(R.string.txt)+" "+manager;
                 textmanage.setText(txt);
             }
 
