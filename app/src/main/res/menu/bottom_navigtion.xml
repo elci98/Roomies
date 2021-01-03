@@ -18,9 +18,5 @@
         android:icon="@drawable/ic_baseline_account_box_24"
         android:title="account"
         />
-    <item
-        android:id="@+id/activity_btn"
-        android:icon="@drawable/ic_activity_svgrepo_com"
-        android:title="activity"
-        />
+
 </menu>
