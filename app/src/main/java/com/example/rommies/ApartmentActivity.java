@@ -283,20 +283,22 @@ public class ApartmentActivity extends AppCompatActivity {
                             System.out.println("11111222244444 "+newemail);
                             FirebaseUser cUser=mAuth.getCurrentUser();
 
-                            if(cUser.getEmail().equals(CurrentEmail))
-                            {
+
                                 emailchange.setVisibility(View.GONE);
                                 email.setText(newemail);
+
+                                CurrentEmail=newemail;
                                 System.out.println("111112222333 "+CurrentEmail);
                                 cUser.updateEmail(newemail);
                                 setEmailAdress(newemail);
-                            }
+
                         }
 
                         if(!newname.isEmpty() && !newname.equals(CurrentName))
                         {
                             System.out.println("999999 "+newname);
                             System.out.println("55555555 "+CurrentName);
+                            CurrentName=newname;
                             namechange.setVisibility(View.GONE);
                             name.setText(newname);
                             setNewName(newname);
