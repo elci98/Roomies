@@ -69,7 +69,6 @@ public class RegisterActivity extends AppCompatActivity
                 }
                 DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
                 Uid = task.getResult().getUser().getUid();
-                u.setUid(Uid);
                 dbRef.child("Users").child(Uid).setValue(u);
                 pb.setVisibility(View.GONE);
                 Toast.makeText(RegisterActivity.this, "user created successfully", Toast.LENGTH_SHORT).show();
@@ -78,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity
                 {
                     Intent intent = new Intent(getApplicationContext(), JoinAprActivity.class);
                     intent.putExtra("com.example.roomies.Name",u.getName());
-                    intent.putExtra("com.example.roomies.Uid",u.getUid());
+                    intent.putExtra("com.example.roomies.Uid",Uid);
                     intent.putExtra("com.example.rommies.aprKey", getIntent().getStringExtra("com.example.rommies.aprKey"));
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
